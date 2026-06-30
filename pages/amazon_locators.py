@@ -1,0 +1,12 @@
+class AmazonLocators:
+    SEARCH_INPUT = 'input[name="field-keywords"]'
+    SEARCH_BUTTON = 'input[type="submit"][value="Go"]'
+    RESULT_LINK = 'h2 a'
+    ADD_TO_CART_BUTTON = '#add-to-cart-button'
+    CART_BUTTON = '#nav-cart'
+    CART_COUNT = '#nav-cart-count'
+    ACTIVE_ITEMS = 'div[data-name="Active Items"]'
+    LOGIN_EMAIL = '#ap_email'
+    LOGIN_CONTINUE = '#continue'
+    LOGIN_PASSWORD = '#ap_password'
+    LOGIN_SUBMIT = '#signInSubmit'
