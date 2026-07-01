@@ -1,21 +1,34 @@
 pipeline {
   agent any
 
+  triggers {
+    githubPush()
+  }
+
   environment {
+    GITHUB_REPO_URL = 'https://github.com/your-username/Playwright_Framework.git'
+    GITHUB_BRANCH = 'main'
     AMAZON_BASE_URL = 'https://www.amazon.com'
     AMAZON_SEARCH_TERM = 'iphone 16 black 256 gb'
   }
 
   stages {
-    stage('Install dependencies') {
+    stage('Checkout from GitHub') {
       steps {
-        sh 'npm ci'
+        git branch: env.GITHUB_BRANCH, url: env.GITHUB_REPO_URL
       }
     }
 
-    stage('Install Playwright browsers') {
+    stage('Install Python dependencies') {
       steps {
-        sh 'npx playwright install --with-deps chromium'
+        bat 'python -m pip install --upgrade pip'
+        bat 'python -m pip install -r requirements.txt'
+      }
+    }
+
+    stage('Install Playwright browser') {
+      steps {
+        bat 'python -m playwright install chromium'
       }
     }
 
@@ -25,14 +38,14 @@ pipeline {
           string(credentialsId: 'amazon-username', variable: 'AMAZON_USERNAME'),
           string(credentialsId: 'amazon-password', variable: 'AMAZON_PASSWORD')
         ]) {
-          sh 'npx playwright test'
+          bat 'python -m pytest'
         }
       }
     }
 
     stage('Generate Allure report') {
       steps {
-        sh 'npx allure generate allure-results --clean -o allure-report || true'
+        bat 'allure generate allure-results --clean -o allure-report || exit 0'
       }
     }
   }
